@@ -1,7 +1,172 @@
 # API - Conciliador Bancario
 
-**Base URL:** `http://localhost:3000`
-**Documentación interactiva (Swagger):** `http://localhost:3000/api`
+Sistema de conciliación bancaria automática que cruza **ventas**, **liquidaciones de procesadores de pago** y **movimientos bancarios** para detectar coincidencias, diferencias y casos pendientes de revisión.
+
+---
+
+## Stack tecnológico
+
+| Capa | Tecnología |
+|------|------------|
+| Framework | NestJS v11 |
+| Lenguaje | TypeScript 5.7 |
+| Base de datos | PostgreSQL |
+| ORM | Prisma v7 |
+| Documentación | Swagger / OpenAPI (`/api`) |
+| Runtime | Node.js |
+
+---
+
+## Requisitos previos
+
+- **Node.js** v18 o superior
+- **PostgreSQL** corriendo localmente en el puerto `5432`
+- Base de datos creada con el nombre `conciliador`
+- Usuario `postgres` con contraseña `admin` (o ajustar el `.env`)
+
+---
+
+## Instalación y puesta en marcha desde cero
+
+### 1. Instalar dependencias
+
+```bash
+cd backend
+npm install
+```
+
+### 2. Configurar la base de datos
+
+El archivo `backend/.env` ya tiene la cadena de conexión por defecto:
+
+```
+DATABASE_URL="postgresql://postgres:admin@localhost:5432/conciliador?schema=public"
+```
+
+Si tu PostgreSQL usa otro usuario o contraseña, editá ese archivo antes de continuar.
+
+### 3. Ejecutar migraciones de Prisma
+
+Esto crea todas las tablas en la base de datos:
+
+```bash
+npx prisma migrate deploy
+```
+
+> Si es la primera vez y no existe ninguna migración aplicada, usá `npx prisma migrate dev` en su lugar.
+
+### 4. Cargar datos de prueba (seed)
+
+Carga 10 ventas, 9 liquidaciones, 9 movimientos bancarios y 6 reglas de conciliación cubriendo todos los escenarios posibles:
+
+```bash
+npm run seed
+```
+
+### 5. Levantar el servidor
+
+```bash
+npm run start:dev
+```
+
+El servidor queda disponible en `http://localhost:3000`.
+La documentación Swagger interactiva en `http://localhost:3000/api`.
+
+---
+
+### Flujo recomendado de prueba - endpoints basicos
+
+Seguí este orden para probar y verificar que el ciclo completo de conciliación es correcto localmente:
+
+#### Paso 1 — Verificar que el servidor responde
+
+```
+GET http://localhost:3000/
+```
+Respuesta esperada: `"Hello World!"`
+
+#### Paso 2 — Ver los datos del seed cargados
+
+```
+GET http://localhost:3000/sales
+GET http://localhost:3000/settlements
+GET http://localhost:3000/bank-movements
+```
+
+Deberías ver los arrays con los 10 registros de ventas, 9 liquidaciones y 9 movimientos bancarios.
+
+#### Paso 3 — Ejecutar la conciliación automática
+
+```
+POST http://localhost:3000/reconciliation/run
+```
+Sin body. El motor cruza automáticamente ventas con liquidaciones y movimientos bancarios.
+
+Respuesta esperada:
+```json
+{
+  "processed": 10,
+  "reconciled": 6,
+  "pending": 1,
+  "differences": 3
+}
+```
+
+#### Paso 4 — Ver el dashboard de resultados
+
+```
+GET http://localhost:3000/reconciliation/dashboard
+```
+
+#### Paso 5 — Explorar los distintos escenarios
+
+Filtrá conciliaciones por estado para ver cada caso:
+
+```
+GET http://localhost:3000/reconciliation?status=AUTO_RECONCILED
+GET http://localhost:3000/reconciliation?status=DIFFERENCE_DETECTED
+GET http://localhost:3000/reconciliation?status=PENDING
+```
+
+#### Paso 6 — Resolver una diferencia manualmente
+
+Copiá el `id` de alguna conciliación con `DIFFERENCE_DETECTED` y enviá:
+
+```
+PATCH http://localhost:3000/reconciliation/{id}/manual
+Content-Type: application/json
+
+{
+  "notes": "Diferencia justificada por retención especial del período",
+  "resolvedBy": "admin"
+}
+```
+
+#### Paso 7 — Ver liquidaciones y movimientos huérfanos
+
+```
+GET http://localhost:3000/settlements/unmatched
+GET http://localhost:3000/bank-movements/unmatched
+```
+
+El seed incluye un registro de cada tipo sin conciliación asociada, para simular casos reales.
+
+---
+
+## Escenarios de prueba incluidos en el seed
+
+| # | Factura | Medio de pago | Escenario |
+|---|---------|---------------|-----------|
+| 1 | FAC-45821 | Crédito VISA | Conciliación perfecta: todo coincide |
+| 2 | FAC-45822 | Débito BANELCO | Comisiones dentro del rango esperado |
+| 3 | FAC-45823 | Crédito MASTERCARD | Banco depositó menos de lo calculado |
+| 4 | FAC-45824 | Crédito VISA | Venta pendiente: sin liquidación todavía |
+| 5 | FAC-45825 | Transferencia | Transferencia exacta sin comisiones |
+| 6 | FAC-45826 | Crédito VISA | Contracargo parcial post-venta |
+| 7 | FAC-45827 | Marketplace (MP) | Comisión alta de MercadoPago |
+| 8 | FAC-45828 | QR (MODO) | Pago QR con acreditación el mismo día |
+| 9a | FAC-45829 | Marketplace (MP) | Depósito agrupado — parte 1 de 2 |
+| 9b | FAC-45830 | Marketplace (MP) | Depósito agrupado — parte 2 de 2 |
 
 ---
 
