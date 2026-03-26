@@ -1,0 +1,378 @@
+{
+  "_description": "Datos de prueba para el sistema de conciliación. 9 escenarios que cubren todos los estados posibles.",
+
+  "rules": [
+    {
+      "name": "Visa Crédito - Estándar",
+      "paymentMethod": "CREDIT_CARD",
+      "processor": "VISA",
+      "commissionPercent": 3.0,
+      "taxRetentionPercent": 1.5,
+      "financingCostPercent": 0,
+      "toleranceDays": 10,
+      "toleranceAmountPercent": 0.5
+    },
+    {
+      "name": "Mastercard Crédito - Estándar",
+      "paymentMethod": "CREDIT_CARD",
+      "processor": "MASTERCARD",
+      "commissionPercent": 2.9,
+      "taxRetentionPercent": 1.5,
+      "financingCostPercent": 0,
+      "toleranceDays": 10,
+      "toleranceAmountPercent": 0.5
+    },
+    {
+      "name": "Débito - Estándar",
+      "paymentMethod": "DEBIT_CARD",
+      "processor": null,
+      "commissionPercent": 1.1,
+      "taxRetentionPercent": 0.5,
+      "financingCostPercent": 0,
+      "toleranceDays": 3,
+      "toleranceAmountPercent": 0.3
+    },
+    {
+      "name": "Transferencia bancaria",
+      "paymentMethod": "TRANSFER",
+      "processor": null,
+      "commissionPercent": 0,
+      "taxRetentionPercent": 0,
+      "financingCostPercent": 0,
+      "toleranceDays": 2,
+      "toleranceAmountPercent": 0.1
+    },
+    {
+      "name": "QR Interoperable",
+      "paymentMethod": "QR",
+      "processor": null,
+      "commissionPercent": 0.8,
+      "taxRetentionPercent": 0.5,
+      "financingCostPercent": 0,
+      "toleranceDays": 2,
+      "toleranceAmountPercent": 0.3
+    },
+    {
+      "name": "Mercado Pago - Marketplace",
+      "paymentMethod": "MARKETPLACE",
+      "processor": "MERCADOPAGO",
+      "commissionPercent": 6.5,
+      "taxRetentionPercent": 3.0,
+      "financingCostPercent": 0,
+      "toleranceDays": 14,
+      "toleranceAmountPercent": 1.0
+    }
+  ],
+
+  "sales": [
+    {
+      "_scenario": "1 - Conciliación perfecta: venta + liquidación + banco todo coincide",
+      "invoiceNumber": "FAC-45821",
+      "date": "2024-04-12T10:30:00Z",
+      "amount": 120000,
+      "currency": "ARS",
+      "paymentMethod": "CREDIT_CARD",
+      "source": "ARGESTION",
+      "externalId": "ARG-001"
+    },
+    {
+      "_scenario": "2 - Conciliación con comisiones y retenciones dentro del rango esperado",
+      "invoiceNumber": "FAC-45822",
+      "date": "2024-04-13T14:15:00Z",
+      "amount": 85000,
+      "currency": "ARS",
+      "paymentMethod": "DEBIT_CARD",
+      "source": "POSBERRY",
+      "externalId": "POS-002"
+    },
+    {
+      "_scenario": "3 - Diferencia mayor a lo esperado: banco depositó menos de lo calculado",
+      "invoiceNumber": "FAC-45823",
+      "date": "2024-04-14T09:00:00Z",
+      "amount": 200000,
+      "currency": "ARS",
+      "paymentMethod": "CREDIT_CARD",
+      "source": "ARGESTION",
+      "externalId": "ARG-003"
+    },
+    {
+      "_scenario": "4 - Venta pendiente: no hay liquidación todavía",
+      "invoiceNumber": "FAC-45824",
+      "date": "2024-04-15T16:45:00Z",
+      "amount": 55000,
+      "currency": "ARS",
+      "paymentMethod": "CREDIT_CARD",
+      "source": "ARGESTION",
+      "externalId": "ARG-004"
+    },
+    {
+      "_scenario": "5 - Transferencia exacta, sin comisiones: conciliación perfecta",
+      "invoiceNumber": "FAC-45825",
+      "date": "2024-04-16T11:00:00Z",
+      "amount": 340000,
+      "currency": "ARS",
+      "paymentMethod": "TRANSFER",
+      "source": "ARGESTION",
+      "externalId": "ARG-005"
+    },
+    {
+      "_scenario": "6 - Contracargo parcial post-venta: diferencia detectada",
+      "invoiceNumber": "FAC-45826",
+      "date": "2024-04-10T08:30:00Z",
+      "amount": 150000,
+      "currency": "ARS",
+      "paymentMethod": "CREDIT_CARD",
+      "source": "POSBERRY",
+      "externalId": "POS-006"
+    },
+    {
+      "_scenario": "7 - Marketplace: venta en MercadoLibre con comisión alta",
+      "invoiceNumber": "FAC-45827",
+      "date": "2024-04-11T13:20:00Z",
+      "amount": 95000,
+      "currency": "ARS",
+      "paymentMethod": "MARKETPLACE",
+      "source": "ARGESTION",
+      "externalId": "ML-007"
+    },
+    {
+      "_scenario": "8 - QR: pago exacto y rápida acreditación",
+      "invoiceNumber": "FAC-45828",
+      "date": "2024-04-17T10:00:00Z",
+      "amount": 42500,
+      "currency": "ARS",
+      "paymentMethod": "QR",
+      "source": "POSBERRY",
+      "externalId": "POS-008"
+    },
+    {
+      "_scenario": "9 - Depósito agrupado: dos ventas en una sola liquidación (Marketplace semanal)",
+      "invoiceNumber": "FAC-45829",
+      "date": "2024-04-08T09:00:00Z",
+      "amount": 67000,
+      "currency": "ARS",
+      "paymentMethod": "MARKETPLACE",
+      "source": "ARGESTION",
+      "externalId": "ML-009A"
+    },
+    {
+      "_scenario": "9b - Segunda venta del lote agrupado",
+      "invoiceNumber": "FAC-45830",
+      "date": "2024-04-09T11:30:00Z",
+      "amount": 83000,
+      "currency": "ARS",
+      "paymentMethod": "MARKETPLACE",
+      "source": "ARGESTION",
+      "externalId": "ML-009B"
+    }
+  ],
+
+  "settlements": [
+    {
+      "_scenario": "1 - Liquidación perfecta para FAC-45821",
+      "date": "2024-04-19T00:00:00Z",
+      "processor": "VISA",
+      "reference": "LIQ-VISA-0419-001",
+      "grossAmount": 120000,
+      "commission": 3600,
+      "taxRetention": 1800,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 114600,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "2 - Liquidación débito para FAC-45822",
+      "date": "2024-04-15T00:00:00Z",
+      "processor": "BANELCO",
+      "reference": "LIQ-DEB-0415-002",
+      "grossAmount": 85000,
+      "commission": 935,
+      "taxRetention": 425,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 83640,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "3 - Liquidación con diferencia inusual para FAC-45823 (banco retuvo extra por error)",
+      "date": "2024-04-21T00:00:00Z",
+      "processor": "MASTERCARD",
+      "reference": "LIQ-MC-0421-003",
+      "grossAmount": 200000,
+      "commission": 5800,
+      "taxRetention": 3000,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 191200,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "5 - Liquidación transferencia exacta para FAC-45825",
+      "date": "2024-04-16T15:00:00Z",
+      "processor": "BANCO_NACION",
+      "reference": "TRF-BNA-0416-005",
+      "grossAmount": 340000,
+      "commission": 0,
+      "taxRetention": 0,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 340000,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "6 - Liquidación con contracargo: procesador descontó por reclamo",
+      "date": "2024-04-17T00:00:00Z",
+      "processor": "VISA",
+      "reference": "LIQ-VISA-0417-006",
+      "grossAmount": 150000,
+      "commission": 4500,
+      "taxRetention": 2250,
+      "financingCost": 0,
+      "otherDeductions": 18000,
+      "netAmount": 125250,
+      "currency": "ARS",
+      "notes": "Incluye contracargo parcial por reclamo de cliente. Descuento: $18.000"
+    },
+    {
+      "_scenario": "7 - Liquidación Marketplace FAC-45827",
+      "date": "2024-04-18T00:00:00Z",
+      "processor": "MERCADOPAGO",
+      "reference": "LIQ-MP-0418-007",
+      "grossAmount": 95000,
+      "commission": 6175,
+      "taxRetention": 2850,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 85975,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "8 - Liquidación QR para FAC-45828",
+      "date": "2024-04-18T00:00:00Z",
+      "processor": "MODO",
+      "reference": "LIQ-QR-0418-008",
+      "grossAmount": 42500,
+      "commission": 340,
+      "taxRetention": 212.50,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 41947.50,
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "9 - Liquidación agrupada Marketplace: cubre FAC-45829 + FAC-45830 en un solo pago",
+      "date": "2024-04-15T00:00:00Z",
+      "processor": "MERCADOPAGO",
+      "reference": "LIQ-MP-BATCH-0415-009",
+      "grossAmount": 150000,
+      "commission": 9750,
+      "taxRetention": 4500,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 135750,
+      "currency": "ARS",
+      "notes": "Liquidación semanal. Incluye ventas FAC-45829 ($67.000) y FAC-45830 ($83.000)"
+    },
+    {
+      "_scenario": "EXTRA - Liquidación huérfana: llegó sin venta registrada en el sistema",
+      "date": "2024-04-20T00:00:00Z",
+      "processor": "VISA",
+      "reference": "LIQ-VISA-0420-ORPHAN",
+      "grossAmount": 37500,
+      "commission": 1125,
+      "taxRetention": 562.50,
+      "financingCost": 0,
+      "otherDeductions": 0,
+      "netAmount": 35812.50,
+      "currency": "ARS",
+      "notes": "Sin venta asociada en el sistema. Requiere revisión manual."
+    }
+  ],
+
+  "bankMovements": [
+    {
+      "_scenario": "1 - Acreditación perfecta para liquidación VISA FAC-45821",
+      "date": "2024-04-19T10:00:00Z",
+      "amount": 114600,
+      "description": "Liquidación adquirente tarjetas VISA",
+      "reference": "VISA-0419-001",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "2 - Acreditación débito FAC-45822",
+      "date": "2024-04-15T14:00:00Z",
+      "amount": 83640,
+      "description": "Acreditación red BANELCO débito",
+      "reference": "BANELCO-0415-002",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "3 - Banco acreditó menos de lo esperado (diferencia real)",
+      "date": "2024-04-22T09:00:00Z",
+      "amount": 183000,
+      "description": "Liquidación adquirente MASTERCARD",
+      "reference": "MC-0422-003",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS",
+      "notes": "Monto acreditado: $183.000. Esperado: $191.200. Diferencia de $8.200 no justificada."
+    },
+    {
+      "_scenario": "5 - Transferencia exacta FAC-45825",
+      "date": "2024-04-16T16:30:00Z",
+      "amount": 340000,
+      "description": "Transferencia bancaria cliente corporativo",
+      "reference": "TRF-BNA-0416-005",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "6 - Acreditación con contracargo FAC-45826",
+      "date": "2024-04-18T10:00:00Z",
+      "amount": 125250,
+      "description": "Liquidación VISA con descuento por contracargo",
+      "reference": "VISA-0418-006",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "7 - Acreditación Marketplace FAC-45827",
+      "date": "2024-04-19T00:00:00Z",
+      "amount": 85975,
+      "description": "Liquidación semanal MercadoPago",
+      "reference": "MP-0419-007",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "8 - Acreditación QR mismo día FAC-45828",
+      "date": "2024-04-18T23:00:00Z",
+      "amount": 41947.50,
+      "description": "Acreditación QR MODO",
+      "reference": "MODO-0418-008",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "9 - Depósito agrupado Marketplace (lote de dos ventas)",
+      "date": "2024-04-16T00:00:00Z",
+      "amount": 135750,
+      "description": "Liquidación batch semanal MercadoPago",
+      "reference": "MP-BATCH-0416-009",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS"
+    },
+    {
+      "_scenario": "EXTRA - Movimiento bancario sin liquidación registrada",
+      "date": "2024-04-23T09:00:00Z",
+      "amount": 22000,
+      "description": "Acreditación origen desconocido",
+      "reference": "UNK-0423-999",
+      "bankAccount": "CA 0000-123456789",
+      "currency": "ARS",
+      "notes": "No se encontró liquidación asociada. Requiere revisión."
+    }
+  ]
+}

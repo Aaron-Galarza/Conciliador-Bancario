@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(npx @nestjs/cli new backend --package-manager npm --skip-git)",
+      "Bash(cmd /c \"npx @nestjs/cli new backend --package-manager npm --skip-git\")",
+      "Bash(cmd /c \"where node && where npm && where npx\")",
+      "Bash(cmd /c \"node --version\")",
+      "Bash(cmd /c \"dir \"\"C:\\\\Program Files\\\\nodejs\"\"\")",
+      "Bash(cmd /c \"dir C:\\\\\")",
+      "Bash(cmd /c \"echo test\")",
+      "Bash(powershell -Command \"node --version\")",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\\\Program Files\\\\nodejs'' -ErrorAction SilentlyContinue; Get-ChildItem ''C:\\\\Program Files \\(x86\\)\\\\nodejs'' -ErrorAction SilentlyContinue; Get-ChildItem \"\"$env:APPDATA\\\\npm\"\" -ErrorAction SilentlyContinue; Get-ChildItem \"\"$env:LOCALAPPDATA\\\\Programs\\\\nodejs\"\" -ErrorAction SilentlyContinue\")",
+      "Bash(powershell -Command \"& ''C:\\\\Program Files\\\\nodejs\\\\node.exe'' --version\")",
+      "Bash(powershell -Command \"& ''C:\\\\Program Files\\\\nodejs\\\\npx.cmd'' @nestjs/cli new backend --package-manager npm --skip-git\")",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\\\Users\\\\Usuario\\\\AppData\\\\Roaming\\\\npm'' -ErrorAction SilentlyContinue | Select-Object Name\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\setup.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\install-deps.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\prisma-init.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\migrate.ps1\")",
+      "Bash(powershell -Command \"Get-ChildItem -Recurse ''C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\backend\\\\src'' | Select-Object FullName\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\backend\\\\run-seed.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\backend\\\\install-pg.ps1\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\backend\\\\start.ps1\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 15; Get-Content ''C:\\\\Users\\\\Usuario\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Usuario-Desktop-Claude\\\\tasks\\\\b6f13c2.output'' -Tail 40\")",
+      "Bash(powershell -Command \"Remove-Item ''C:\\\\Users\\\\Usuario\\\\Desktop\\\\Claude\\\\backend\\\\prisma\\\\prisma.config.ts'' -Force\")",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 20; Get-Content ''C:\\\\Users\\\\Usuario\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Usuario-Desktop-Claude\\\\tasks\\\\b6f13c2.output'' -Tail 30\")",
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)"
+    ]
+  }
+}

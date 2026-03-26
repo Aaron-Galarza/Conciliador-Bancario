@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  TRANSFER
+  QR
+  MARKETPLACE
+  ACCOUNT_RECEIVABLE
+}
+
+enum SaleStatus {
+  PENDING
+  SETTLED
+  RECONCILED
+}
+
+enum ReconciliationStatus {
+  PENDING
+  AUTO_RECONCILED
+  MANUALLY_RECONCILED
+  DIFFERENCE_DETECTED
+}
+
+enum DataSource {
+  ARGESTION
+  POSBERRY
+  MANUAL
+  IMPORT
+}
+
+// ─── MODELOS PRINCIPALES ──────────────────────────────────────────────────────
+
+// Ventas provenientes de arGestion / Posberry
+model Sale {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  date          DateTime
+  amount        Decimal       @db.Decimal(15, 2)
+  currency      String        @default("ARS")
+  paymentMethod PaymentMethod
+  source        DataSource
+  status        SaleStatus    @default(PENDING)
+  externalId    String?       // ID en el sistema origen
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  reconciliation Reconciliation?
+
+  @@map("sales")
+}
+
+// Liquidaciones de procesadores de pago (Visa, Mastercard, MercadoPago, etc.)
+model Settlement {
+  id           String   @id @default(uuid())
+  date         DateTime
+  processor    String   // "VISA", "MASTERCARD", "MERCADOPAGO", etc.
+  reference    String?  // Referencia del procesador para matching
+  grossAmount  Decimal  @db.Decimal(15, 2)
+  commission   Decimal  @db.Decimal(15, 2) @default(0)
+  taxRetention Decimal  @db.Decimal(15, 2) @default(0)
+  financingCost Decimal @db.Decimal(15, 2) @default(0)
+  otherDeductions Decimal @db.Decimal(15, 2) @default(0)
+  netAmount    Decimal  @db.Decimal(15, 2)
+  currency     String   @default("ARS")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  reconciliation Reconciliation?
+
+  @@map("settlements")
+}
+
+// Movimientos en cuentas bancarias
+model BankMovement {
+  id          String   @id @default(uuid())
+  date        DateTime
+  amount      Decimal  @db.Decimal(15, 2)
+  description String
+  reference   String?  // Referencia del banco para matching
+  bankAccount String   // Número o alias de la cuenta
+  currency    String   @default("ARS")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reconciliation Reconciliation?
+
+  @@map("bank_movements")
+}
+
+// Conciliación: une los tres documentos
+model Reconciliation {
+  id              String               @id @default(uuid())
+  status          ReconciliationStatus @default(PENDING)
+
+  // Relaciones opcionales (puede estar parcialmente conciliado)
+  saleId          String?              @unique
+  settlementId    String?              @unique
+  bankMovementId  String?              @unique
+
+  sale            Sale?                @relation(fields: [saleId], references: [id])
+  settlement      Settlement?          @relation(fields: [settlementId], references: [id])
+  bankMovement    BankMovement?        @relation(fields: [bankMovementId], references: [id])
+
+  // Diferencias detectadas
+  expectedNet     Decimal?             @db.Decimal(15, 2) // Lo que debería haber llegado al banco
+  actualNet       Decimal?             @db.Decimal(15, 2) // Lo que realmente llegó
+  differenceAmount Decimal?            @db.Decimal(15, 2) // expectedNet - actualNet
+  differencePercent Decimal?           @db.Decimal(8, 4)  // Porcentaje de diferencia
+
+  notes           String?
+  resolvedAt      DateTime?            // Cuando fue conciliado
+  resolvedBy      String?              // "AUTO" o usuario manual
+
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@map("reconciliations")
+}
+
+// Reglas de conciliación configurables por medio de pago / procesador
+model ReconciliationRule {
+  id                    String        @id @default(uuid())
+  name                  String
+  paymentMethod         PaymentMethod
+  processor             String?       // Puede ser específico por procesador
+  commissionPercent     Decimal       @db.Decimal(8, 4)
+  taxRetentionPercent   Decimal       @db.Decimal(8, 4) @default(0)
+  financingCostPercent  Decimal       @db.Decimal(8, 4) @default(0)
+  toleranceDays         Int           @default(7)  // Días de tolerancia para matching de fechas
+  toleranceAmountPercent Decimal      @db.Decimal(8, 4) @default(0.5) // % tolerancia en monto
+  isActive              Boolean       @default(true)
+  notes                 String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@unique([paymentMethod, processor])
+  @@map("reconciliation_rules")
+}

@@ -1,0 +1,66 @@
+import { RulesService } from './rules.service';
+import { CreateRuleDto } from './dto/create-rule.dto';
+export declare class RulesController {
+    private readonly rulesService;
+    constructor(rulesService: RulesService);
+    create(dto: CreateRuleDto): Promise<{
+        id: string;
+        name: string;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        processor: string | null;
+        commissionPercent: import("@prisma/client-runtime-utils").Decimal;
+        taxRetentionPercent: import("@prisma/client-runtime-utils").Decimal;
+        financingCostPercent: import("@prisma/client-runtime-utils").Decimal;
+        toleranceDays: number;
+        toleranceAmountPercent: import("@prisma/client-runtime-utils").Decimal;
+        isActive: boolean;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
+    findAll(): Promise<{
+        id: string;
+        name: string;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        processor: string | null;
+        commissionPercent: import("@prisma/client-runtime-utils").Decimal;
+        taxRetentionPercent: import("@prisma/client-runtime-utils").Decimal;
+        financingCostPercent: import("@prisma/client-runtime-utils").Decimal;
+        toleranceDays: number;
+        toleranceAmountPercent: import("@prisma/client-runtime-utils").Decimal;
+        isActive: boolean;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
+    update(id: string, dto: Partial<CreateRuleDto>): Promise<{
+        id: string;
+        name: string;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        processor: string | null;
+        commissionPercent: import("@prisma/client-runtime-utils").Decimal;
+        taxRetentionPercent: import("@prisma/client-runtime-utils").Decimal;
+        financingCostPercent: import("@prisma/client-runtime-utils").Decimal;
+        toleranceDays: number;
+        toleranceAmountPercent: import("@prisma/client-runtime-utils").Decimal;
+        isActive: boolean;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
+    deactivate(id: string): Promise<{
+        id: string;
+        name: string;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        processor: string | null;
+        commissionPercent: import("@prisma/client-runtime-utils").Decimal;
+        taxRetentionPercent: import("@prisma/client-runtime-utils").Decimal;
+        financingCostPercent: import("@prisma/client-runtime-utils").Decimal;
+        toleranceDays: number;
+        toleranceAmountPercent: import("@prisma/client-runtime-utils").Decimal;
+        isActive: boolean;
+        notes: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
+}
